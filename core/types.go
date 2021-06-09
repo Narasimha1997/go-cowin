@@ -27,8 +27,8 @@ type DistrictResp struct {
 	TTL       int        `json:"ttl"`
 }
 
-// CertificateError the API response returned by /certificate/public/download upon error
-type CertificateError struct {
+// ErrorType the API response returned by /certificate/public/download upon error
+type ErrorType struct {
 	ErrorCode string `json:"errorCode"`
 	ErrString string `json:"error"`
 }
