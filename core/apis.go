@@ -1,7 +1,10 @@
 package core
 
 import (
+	"encoding/json"
 	"errors"
+	"fmt"
+	"io/ioutil"
 	"net/http"
 )
 
@@ -32,6 +35,7 @@ func apiResponsePainc(err string) error {
 type CoWinAPI struct {
 	language  string
 	userAgent string
+	client    *http.Client
 }
 
 func NewCoWinAPI(lanugae string, userAgent string) *CoWinAPI {
@@ -48,6 +52,8 @@ func NewCoWinAPI(lanugae string, userAgent string) *CoWinAPI {
 		cowinApi.userAgent = DefaultUserAgent
 	}
 
+	cowinApi.client = &http.Client{}
+
 	return &cowinApi
 }
 
@@ -56,6 +62,96 @@ func (c *CoWinAPI) setHeaders(req *http.Request) {
 	req.Header.Set("Accept-Language", c.language)
 }
 
-func (c *CoWinAPI) GetStates() {
+func (c *CoWinAPI) handleErrorStatusCode(resp *http.Response) error {
+	status := resp.StatusCode
+	switch status {
+	case 400:
+		return errors.New("Bad Request")
+	case 500:
+		return errors.New("Internal Server Error")
+	case 401:
+		return errors.New("Unauthenticated Access")
+	default:
+		return nil
+	}
+}
 
+func (c *CoWinAPI) getter(routeCode string, urlExt string, queryParams map[string]string) ([]byte, error) {
+	routeURI, _ := Routes[routeCode]
+	url := fmt.Sprintf("%s%s%s", DefaultServiceURL, routeURI, urlExt)
+
+	// make post:
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	// set headers
+	c.setHeaders(req)
+
+	// set Query parameters:
+	if len(queryParams) > 0 {
+		q := req.URL.Query()
+		for key, value := range queryParams {
+			q.Add(key, value)
+		}
+
+		req.URL.RawQuery = q.Encode()
+	}
+
+	// make the GET request
+	resp, err := c.client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	// read response:
+	err = c.handleErrorStatusCode(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	// now read the body
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	return body, nil
+}
+
+// GetStates get all the states and their IDs listed by CoWIN
+func (c *CoWinAPI) GetStates() (*StateResp, error) {
+	body, err := c.getter("get_states", "", map[string]string{})
+	if err != nil {
+		return nil, err
+	}
+
+	// serialize the body:
+	states := StateResp{}
+	err = json.Unmarshal(body, &states)
+	if err != nil {
+		return nil, err
+	}
+
+	return &states, nil
+}
+
+// GetDistricts Get all the districts under a state, pass stateID as the parameter
+func (c *CoWinAPI) GetDistricts(stateID int) (*DistrictResp, error) {
+	body, err := c.getter(
+		"get_districts", fmt.Sprintf("/%d", stateID), map[string]string{},
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	// serialize the body:
+	districts := DistrictResp{}
+	err = json.Unmarshal(body, &districts)
+	if err != nil {
+		return nil, err
+	}
+
+	return &districts, nil
 }

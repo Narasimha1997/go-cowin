@@ -22,7 +22,7 @@ type StateResp struct {
 }
 
 // DistrictResp the API response returned by /location/districts
-type DistrictMap struct {
+type DistrictResp struct {
 	Districts []District `json:"districts"`
 	TTL       int        `json:"ttl"`
 }
