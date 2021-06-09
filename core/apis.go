@@ -38,23 +38,24 @@ type CoWinAPI struct {
 	client    *http.Client
 }
 
-func NewCoWinAPI(lanugae string, userAgent string) *CoWinAPI {
-	cowinApi := CoWinAPI{}
-	if lanugae != "" {
-		cowinApi.language = lanugae
+// NewCoWinAPI Creates and returns a new CoWinAPI given language and userAgent string
+func NewCoWinAPI(language string, userAgent string) *CoWinAPI {
+	coWinAPI := CoWinAPI{}
+	if language != "" {
+		coWinAPI.language = language
 	} else {
-		cowinApi.language = "en_US"
+		coWinAPI.language = "en_US"
 	}
 
 	if userAgent != "" {
-		cowinApi.userAgent = userAgent
+		coWinAPI.userAgent = userAgent
 	} else {
-		cowinApi.userAgent = DefaultUserAgent
+		coWinAPI.userAgent = DefaultUserAgent
 	}
 
-	cowinApi.client = &http.Client{}
+	coWinAPI.client = &http.Client{}
 
-	return &cowinApi
+	return &coWinAPI
 }
 
 func (c *CoWinAPI) setHeaders(req *http.Request) {
