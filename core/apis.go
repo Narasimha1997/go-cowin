@@ -79,7 +79,10 @@ func (c *CoWinAPI) handleErrorStatusCode(resp *http.Response) error {
 
 func (c *CoWinAPI) getter(routeCode string, urlExt string, queryParams map[string]string) ([]byte, error) {
 	routeURI, _ := Routes[routeCode]
-	url := fmt.Sprintf("%s%s%s", DefaultServiceURL, routeURI, urlExt)
+	url := fmt.Sprintf("%s%s", DefaultServiceURL, routeURI)
+	if urlExt != "" {
+		url = fmt.Sprintf("%s%s", url, urlExt)
+	}
 
 	// make post:
 	req, err := http.NewRequest("GET", url, nil)
@@ -147,7 +150,7 @@ func (c *CoWinAPI) GetDistricts(stateID int) (*DistrictResp, error) {
 		return nil, err
 	}
 
-	// serialize the body:
+	// de-serialize the body:
 	districts := DistrictResp{}
 	err = json.Unmarshal(body, &districts)
 	if err != nil {
@@ -155,4 +158,40 @@ func (c *CoWinAPI) GetDistricts(stateID int) (*DistrictResp, error) {
 	}
 
 	return &districts, nil
+}
+
+// GetSessionsByPIN Get the vaccination sessions available by PIN
+func (c *CoWinAPI) GetSessionsByPIN(pincode string, date string) (*VaccinationSessionResp, error) {
+	body, err := c.getter("find_by_pin", "", map[string]string{
+		"pincode": pincode,
+		"date":    date,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	// de-serialize the body:
+	vaccinationResp := VaccinationSessionResp{}
+	err = json.Unmarshal(body, &vaccinationResp)
+	if err != nil {
+		return nil, err
+	}
+
+	return &vaccinationResp, err
+}
+
+// GetCertificate Get the certificate in binary blob format
+func (c *CoWinAPI) GetCertificate(beneficiaryID string) ([]byte, error) {
+	body, err := c.getter(
+		"download_cert", "", map[string]string{
+			"beneficiary_reference_id": beneficiaryID,
+		},
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return body, nil
 }

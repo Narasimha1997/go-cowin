@@ -40,11 +40,11 @@ type VaccinationSession struct {
 	DistrictNameL      string   `json:"district_name_l"`
 	BlockName          string   `json:"block_name"`
 	BlockNameL         string   `json:"block_name_l"`
-	Pincode            string   `json:"pincode"`
+	Pincode            int      `json:"pincode"`
 	Lat                float32  `json:"lat"`
 	Long               float32  `json:"lan"`
-	FromTime           float32  `json:"from"`
-	ToTime             float32  `json:"to"`
+	FromTime           string   `json:"from"`
+	ToTime             string   `json:"to"`
 	FeeType            string   `json:"fee_type"`
 	Fee                string   `json:"fee"`
 	SessionID          string   `json:"session_id"`
