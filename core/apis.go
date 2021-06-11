@@ -183,7 +183,7 @@ func (c *CoWinAPI) GetSessionsByPIN(pincode string, date string) (*VaccinationSe
 
 // GetSessionsByDistrict Get the vaccination sessions available by district ID
 func (c *CoWinAPI) GetSessionsByDistrict(districtID int, date string) (*VaccinationSessionResp, error) {
-	body, err := c.getter("find_by_pin", "", map[string]string{
+	body, err := c.getter("find_by_district", "", map[string]string{
 		"district_id": fmt.Sprintf("%d", districtID),
 		"date":        date,
 	})
@@ -200,6 +200,27 @@ func (c *CoWinAPI) GetSessionsByDistrict(districtID int, date string) (*Vaccinat
 	}
 
 	return &vaccinationResp, err
+}
+
+// GetCentersByLatLong Get the vaccination sessions available by lat long
+func (c *CoWinAPI) GetCentersByLatLong(lat float32, long float32) (*VaccinationCentersResp, error) {
+	body, err := c.getter("find_by_lat_lan", "", map[string]string{
+		"lat":  fmt.Sprintf("%f", lat),
+		"long": fmt.Sprintf("%f", long),
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	// de-serialize the body:
+	centersResp := VaccinationCentersResp{}
+	err = json.Unmarshal(body, &centersResp)
+	if err != nil {
+		return nil, err
+	}
+
+	return &centersResp, err
 }
 
 // GetCertificate Get the certificate in binary blob format

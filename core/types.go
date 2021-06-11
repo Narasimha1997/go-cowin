@@ -42,7 +42,7 @@ type VaccinationSession struct {
 	BlockNameL         string   `json:"block_name_l"`
 	Pincode            int      `json:"pincode"`
 	Lat                float32  `json:"lat"`
-	Long               float32  `json:"lan"`
+	Long               float32  `json:"long"`
 	FromTime           string   `json:"from"`
 	ToTime             string   `json:"to"`
 	FeeType            string   `json:"fee_type"`
@@ -60,6 +60,33 @@ type VaccinationSession struct {
 // VaccinationSessionResp the response returned by all find* APIs
 type VaccinationSessionResp struct {
 	Sessions []VaccinationSession `json:"sessions"`
+}
+
+// VaccinationCenter the type that represents a vaccination center
+type VaccinationCenter struct {
+	CenterID      int    `json:"center_id"`
+	Name          string `json:"name"`
+	NameL         string `json:"name_l"`
+	Address       string `json:"address"`
+	AddressL      string `json:"address_l"`
+	StateName     string `json:"state_name"`
+	StateNameL    string `json:"state_name_l"`
+	DistrictName  string `json:"district_name"`
+	DistrictNameL string `json:"district_name_l"`
+	BlockName     string `json:"block_name"`
+	BlockNameL    string `json:"block_name_l"`
+	Pincode       string `json:"pincode"`
+	Lat           string `json:"lat"`
+	Long          string `json:"long"`
+	FromTime      string `json:"from"`
+	ToTime        string `json:"to"`
+	FeeType       string `json:"fee_type"`
+}
+
+// VaccinationCentersResp the type that represents vaccination response
+type VaccinationCentersResp struct {
+	Centers []VaccinationCenter `json:"centers"`
+	TTL     int                 `json:"ttl"`
 }
 
 // ErrorType the API response returned by /certificate/public/download upon error
