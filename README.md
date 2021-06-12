@@ -5,7 +5,7 @@ Unofficial GO SDK for Indian Government's Co-WIN API Platform. This SDK helps de
 1. Pre-defined functions for all the publically available CoWIN APIs.
 2. Typed definitions of all request/response types.
 3. Functions for authenticating with CoWIN platform.
-4. Functions for Requesting, Signing (using SHA-256) and obtaining Bearer Tokens.
+4. Functions for Requesting, Signing (using SHA-256) OTPs and obtaining Bearer Tokens.
 5. Query vaccination centers, calendars and sessions by location, district or PIN code.
 6. API to download the certificate in PDF format.
 
