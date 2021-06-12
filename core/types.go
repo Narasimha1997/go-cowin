@@ -1,5 +1,26 @@
 package core
 
+// OTPRequest OTP request payload
+type OTPRequest struct {
+	Mobile string `json:"mobile"`
+}
+
+// OTPResponse OTP response payload
+type OTPResponse struct {
+	TxnID string `json:"txnId"`
+}
+
+// OTPConfirmRequest OTP Confirm request payload
+type OTPConfirmRequest struct {
+	OTP   string `json:"otp"`
+	TxnID string `json:"txnId"`
+}
+
+// OTPConfirmResponse OTP Confirm response payload
+type OTPConfirmResponse struct {
+	Token string `json:"token"`
+}
+
 // State the state type
 type State struct {
 	ID    int    `json:"state_id"`
@@ -41,8 +62,8 @@ type VaccinationSession struct {
 	BlockName          string   `json:"block_name"`
 	BlockNameL         string   `json:"block_name_l"`
 	Pincode            int      `json:"pincode"`
-	Lat                float32  `json:"lat"`
-	Long               float32  `json:"long"`
+	Lat                float64  `json:"lat"`
+	Long               float64  `json:"long"`
 	FromTime           string   `json:"from"`
 	ToTime             string   `json:"to"`
 	FeeType            string   `json:"fee_type"`
@@ -56,6 +77,9 @@ type VaccinationSession struct {
 	VaccineName        string   `json:"vaccine"`
 	Slots              []string `json:"slots"`
 }
+
+// VaccinationSessions list of VaccinationSession
+type VaccinationSessions []VaccinationSession
 
 // VaccinationSessionResp the response returned by all find* APIs
 type VaccinationSessionResp struct {
@@ -83,13 +107,53 @@ type VaccinationCenter struct {
 	FeeType       string `json:"fee_type"`
 }
 
+// VaccineFee the type that represents the fee of vaccine
+type VaccineFee struct {
+	Vaccine string `json:"vaccine"`
+	Fee     string `json:"fee"`
+}
+
+// VaccineFeeList list of VaccineFee
+type VaccineFeeList []VaccineFee
+
 // VaccinationCentersResp the type that represents vaccination response
 type VaccinationCentersResp struct {
 	Centers []VaccinationCenter `json:"centers"`
 	TTL     int                 `json:"ttl"`
 }
 
-// ErrorType the API response returned by /certificate/public/download upon error
+// CenterCalendar the sessions of a center by calendar
+type CenterCalendar struct {
+	CenterID      int                 `json:"center_id"`
+	Name          string              `json:"name"`
+	NameL         string              `json:"name_l"`
+	Address       string              `json:"address"`
+	AddressL      string              `json:"address_l"`
+	StateName     string              `json:"state_name"`
+	StateNameL    string              `json:"state_name_l"`
+	DistrictName  string              `json:"district_name"`
+	DistrictNameL string              `json:"district_name_l"`
+	BlockName     string              `json:"block_name"`
+	BlockNameL    string              `json:"block_name_l"`
+	Pincode       int                 `json:"pincode"`
+	Lat           float64             `json:"lat"`
+	Long          float64             `json:"long"`
+	FromTime      string              `json:"from"`
+	ToTime        string              `json:"to"`
+	FeeType       string              `json:"fee_type"`
+	Vaccines      VaccineFeeList      `json:"vaccine_fees"`
+	Sessions      VaccinationSessions `json:"sessions"`
+}
+
+// CentersCalendar List of CenterCalendar
+type CentersCalendar []CenterCalendar
+
+// CentersCalendarResponse The response returned by API
+type CentersCalendarResponse struct {
+	Centers CentersCalendar `json:"centers"`
+}
+
+// ErrorType The error returned by API response
 type ErrorType struct {
 	ErrorCode string `json:"errorCode"`
 	ErrString string `json:"error"`
