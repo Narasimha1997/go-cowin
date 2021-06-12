@@ -56,7 +56,7 @@ Requires Golang to be installed on the dev system.
 
 1. Get the package:
 ```
-go get github.com/Narasimha1997/go-cowin
+go get github.com/Narasimha1997/go-cowin/core
 ```
 
 2. Use it in your codebase:
