@@ -192,7 +192,7 @@ func (c *CoWinAPI) RequestOTP(mobile string) (*OTPResponse, error) {
 	return &otpResponse, nil
 }
 
-// ConfirmSignedOTP Requests an OTP to be sent to given number:
+// ConfirmSignedOTP Confirm an OTP sent to given number by passing SHA-256 hashed otp string:
 func (c *CoWinAPI) ConfirmSignedOTP(otpSHA256 string, txnID string) (*OTPConfirmResponse, error) {
 	otpConfirmRequest := OTPConfirmRequest{OTP: otpSHA256, TxnID: txnID}
 	payload, _ := json.Marshal(&otpConfirmRequest)
@@ -211,7 +211,7 @@ func (c *CoWinAPI) ConfirmSignedOTP(otpSHA256 string, txnID string) (*OTPConfirm
 	return &otpConfirmResponse, nil
 }
 
-// ConfirmRawOTP Requests an OTP to be sent to given number:
+// ConfirmRawOTP Confirm an OTP sent to given number by passing SHA-256 raw otp string
 func (c *CoWinAPI) ConfirmRawOTP(otp string, txnID string) (*OTPConfirmResponse, error) {
 	otpSHA256 := SignOTP(otp)
 	otpConfirmRequest := OTPConfirmRequest{OTP: otpSHA256, TxnID: txnID}

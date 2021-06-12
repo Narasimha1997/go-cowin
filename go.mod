@@ -1,3 +1,3 @@
-module github.com/Narasimha1997/go-corona
+module github.com/Narasimha1997/go-cowin
 
 go 1.15
